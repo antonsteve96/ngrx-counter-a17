@@ -1,0 +1,5 @@
+<div [formGroup]="customCounterForm">
+  <div class="my-3">{{ siteName }}</div>
+  <input type="text" placeholder="Inserisci un valore" formControlName="value"/>
+  <button class="btn btn-primary" (click)="onAdd()">Aggiungi un valore al contatore</button>
+</div>
