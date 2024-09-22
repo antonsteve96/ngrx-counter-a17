@@ -1,12 +1,16 @@
-import {Action, createReducer, } from "@ngrx/store";
-import {AuthState, initialState} from "./auth.state";
+import { Action, createReducer, on } from "@ngrx/store";
+import { AuthState, initialState } from "./auth.state";
+import { loginFailure, loginStart, loginSuccess } from "./auth.actions";
 
-export function authReducer(state: AuthState | undefined, action: Action) {
+// Definisci il reducer principale, gestendo lo stato iniziale come fallback
+export function authReducer(state: AuthState = initialState, action: Action): AuthState {
   return _authReducer(state, action);
 }
 
-export const _authReducer = createReducer(
+// Definisci il reducer con `createReducer`
+const _authReducer = createReducer(
   initialState,
-
-)
-
+  on(loginStart, state => ({ ...state })),
+  on(loginSuccess, (state, action) => ({ ...state, token: action.token })),
+  on(loginFailure, (state, action) => ({ ...state, error: action.error }))
+);
