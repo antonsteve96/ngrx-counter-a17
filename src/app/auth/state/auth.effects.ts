@@ -12,9 +12,9 @@ export class AuthEffects {
 
   login$ = createEffect(() => {
     return this.actions$?.pipe(
-      //ofType(loginStart),
-      //tap(action => console.log('Effetto login innescato', action)),
-      /*exhaustMap((action) =>
+      ofType(loginStart),
+      tap(action => console.log('Effetto login innescato', action)),
+      exhaustMap((action) =>
         this.authService.login(action.email, action.password).pipe(
           map((authResponse: AuthResponse) => {
             console.log(authResponse)
@@ -23,7 +23,7 @@ export class AuthEffects {
           }),
           catchError((error) => of(loginFailure({ error })))
         )
-      )*/
+      )
     );
   });
 
