@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {Post} from "../../models/posts.model";
-import {AppState} from "../../store/app.state";
 import {Store} from "@ngrx/store";
 import {addPost} from "../state/posts.actions";
+import {AppState} from "../../store/app.state";
 
 @Component({
   selector: 'app-add-post',
@@ -22,12 +22,12 @@ export class AddPostComponent {
     description: new FormControl("", [Validators.required, Validators.minLength(10)])
   })
 
-  constructor(private postStore: Store<AppState>) {}
+  private postsStore = inject(Store<AppState>);
 
   onAddPost() {
     console.log(this.addPostForm.value);
     const post: Post = {...this.addPostForm.value}
-    this.postStore.dispatch(addPost({ post: post }))
+    this.postsStore.dispatch(addPost({ post: post }))
   }
 
 

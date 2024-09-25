@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Store} from "@ngrx/store";
-import {map, Observable, Subscription} from "rxjs";
+import { Subscription} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {getCounter} from "../state/counter.selectors";
+import { RootState} from "../../store/root.state";
 import {AppState} from "../../store/app.state";
 
 @Component({
@@ -19,8 +20,7 @@ export class CounterOutputComponent {
   counter: number = 0;
   counterSubscription: Subscription = new Subscription();
 
-  constructor(private counterStore: Store<AppState>) {
-  }
+  private counterStore = inject(Store<AppState>);
 
   ngOnInit(): void {
     this.counterSubscription = this.counterStore.select(getCounter).subscribe((counter) => this.counter = counter)

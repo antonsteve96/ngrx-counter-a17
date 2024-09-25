@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, Subscription, switchMap } from 'rxjs';
-import { PostsState } from "../state/posts.state";
 import { getPostById } from "../state/post.selectors";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { initialPost, Post } from "../../models/posts.model";
 import {NgIf} from "@angular/common";
 import {updatePost} from "../state/posts.actions";
+import {AppState} from "../../store/app.state";
 
 
 @Component({
@@ -23,7 +23,11 @@ export class EditPostComponent implements OnInit, OnDestroy {
   editPostForm: FormGroup = new FormGroup({});
   post: Post = initialPost;
 
-  constructor(private route: ActivatedRoute, private postsStore: Store<PostsState>, private router: Router) {}
+  //constructor(private route: ActivatedRoute, private postsStore: Store<PostsState>, private router: Router) {}
+
+  private route = inject(ActivatedRoute);
+  private postsStore = inject(Store<AppState>)
+  private router = inject(Router)
 
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap

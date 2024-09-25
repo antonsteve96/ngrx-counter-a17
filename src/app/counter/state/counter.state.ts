@@ -4,6 +4,8 @@ export const initialState: CounterState = {
   siteName: "stefanoantonetti"
 }
 
+export const COUNTER_STATE = "counter";
+
 export interface CounterState {
   counter: number;
   siteName: string;

@@ -60,7 +60,7 @@
       </div>
 
       <div class="mb-3">
-        <button type="submit" [disabled]="signupForm.invalid" class="btn btn-primary">Registrati</button>
+        <button type="submit" [disabled]="signupForm.invalid" class="btn btn-primary" (click)="onSignupFormSubmit()">Registrati</button>
       </div>
     </form>
   </div>

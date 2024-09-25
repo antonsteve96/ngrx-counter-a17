@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeletePostComponent } from './delete-post.component';
+import { LoadingSpinnerComponent } from './loading-spinner.component';
 
-describe('DeletePostComponent', () => {
-  let component: DeletePostComponent;
-  let fixture: ComponentFixture<DeletePostComponent>;
+describe('LoadingSpinnerComponent', () => {
+  let component: LoadingSpinnerComponent;
+  let fixture: ComponentFixture<LoadingSpinnerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeletePostComponent]
+      imports: [LoadingSpinnerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DeletePostComponent);
+    fixture = TestBed.createComponent(LoadingSpinnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {Store} from "@ngrx/store";
-import {CounterState} from "../state/counter.state";
 import {customIncrement} from "../state/counter.actions";
 import {getSiteName} from "../state/counter.selectors";
+import {RootState} from "../../store/root.state";
 import {AppState} from "../../store/app.state";
 
 @Component({
@@ -21,8 +21,7 @@ export class CustomCounterInputComponent {
   })
   siteName: string = "";
 
-  constructor(private counterStore: Store<AppState>) {
-  }
+  private counterStore = inject(Store<AppState>);
 
    ngOnInit(): void {
     this.counterStore.select(getSiteName).subscribe((siteName) => this.siteName = siteName)

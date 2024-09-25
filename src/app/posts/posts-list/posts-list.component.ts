@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import {AppState} from "../../store/app.state";
+import {Component, inject} from '@angular/core';
 import {Store} from "@ngrx/store";
-import {Observable, Subscription} from "rxjs";
+import {Observable} from "rxjs";
 import {Post} from "../../models/posts.model";
 import {getPosts} from "../state/post.selectors";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {deletePost} from "../state/posts.actions";
+import {RootState} from "../../store/root.state";
+import {AppState} from "../../store/app.state";
 
 @Component({
   selector: 'app-posts-list',
@@ -23,8 +24,7 @@ import {deletePost} from "../state/posts.actions";
 })
 export class PostsListComponent {
   posts$: Observable<Post[]> = new Observable();
-  constructor(private postsStore: Store<AppState>) {
-  }
+  private postsStore = inject(Store<AppState>);
 
   ngOnInit(): void {
     this.posts$ = this.postsStore.select(getPosts);
