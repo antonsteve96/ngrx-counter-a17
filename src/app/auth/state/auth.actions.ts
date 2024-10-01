@@ -11,13 +11,17 @@ export const loginStart = createAction(LOGIN_START, props<{
   password: string
 }>());
 
-export const loginSuccess = createAction(LOGIN_SUCCESS, props<{ token: string }>());
+export const loginSuccess = createAction(LOGIN_SUCCESS, props<{ token: string, redirect: boolean }>());
 
 const SIGNUP_START = "[Signup] Signup Start";
 const SIGNUP_SUCCESS = "[Signup] Signup Success";
 
 export const signupStart = createAction(SIGNUP_START, props<{ registrationRequest: RegistrationRequest}>());
 
-export const signupSuccess = createAction(SIGNUP_SUCCESS)
+export const signupSuccess = createAction(SIGNUP_SUCCESS, props<{ redirect: boolean }>())
 
 export const autoLogin = createAction(AUTO_LOGIN);
+
+const AUTO_LOGOUT = "[Auth] Logout"
+
+export const autoLogout = createAction(AUTO_LOGOUT)

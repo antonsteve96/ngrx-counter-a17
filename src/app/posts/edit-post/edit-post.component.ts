@@ -1,13 +1,15 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map, Subscription, switchMap } from 'rxjs';
-import { getPostById } from "../state/post.selectors";
+import {filter, map, Subscription, switchMap} from 'rxjs';
+import {getPostById} from "../state/posts.selectors";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { initialPost, Post } from "../../models/posts.model";
 import {NgIf} from "@angular/common";
 import {updatePost} from "../state/posts.actions";
 import {AppState} from "../../store/app.state";
+import {RootState} from "../../store/root.state";
+import {setLoadingSpinner} from "../../store/shared/shared.actions";
 
 
 @Component({
@@ -18,33 +20,36 @@ import {AppState} from "../../store/app.state";
   standalone: true
 })
 export class EditPostComponent implements OnInit, OnDestroy {
-  id: number | null = null;
   routeSubscription: Subscription = new Subscription();
   editPostForm: FormGroup = new FormGroup({});
-  post: Post = initialPost;
-
-  //constructor(private route: ActivatedRoute, private postsStore: Store<PostsState>, private router: Router) {}
+  id: number = 0;
 
   private route = inject(ActivatedRoute);
   private postsStore = inject(Store<AppState>)
   private router = inject(Router)
+  private post: Post = initialPost;
+  private sharedStore = inject(Store<RootState>)
 
   ngOnInit(): void {
-    this.routeSubscription = this.route.paramMap
+    this.route.paramMap
       .pipe(
-        map((params) => params.get('id')),
-        map((idParam: string | null) => (idParam ? +idParam : null)),
-        switchMap((id) => this.postsStore.select(getPostById, { id }))
+        map(params => params.get('id')),
+        map(idParam => (idParam ? +idParam : null)),
+        filter((id): id is number => id !== null),
+        switchMap(id => {
+          this.id = id;
+          return this.postsStore.select(getPostById(id)).pipe(
+            filter((post) => !!post)
+          );
+        })
       )
-      .subscribe((post) => {
-       if(post === undefined) {
-         throw new Error("Post non trovato")
-       } else {
-         this.post = post;
-         this.createForm();
-       }
-       // Richiama createForm quando il post cambia
+      .subscribe((post: Post) => {
+          this.createForm(post);
+          this.post = {...post};
+          console.log(this.post);
+
       });
+
   }
 
   ngOnDestroy() {
@@ -53,18 +58,24 @@ export class EditPostComponent implements OnInit, OnDestroy {
     }
   }
 
-  createForm() {
+  createForm(post: Post) {
     this.editPostForm = new FormGroup({
-      title: new FormControl(this.post.title, [Validators.required, Validators.minLength(6)]),
-      description: new FormControl(this.post.description, [Validators.required, Validators.minLength(10)])
+      title: new FormControl(post.title, [Validators.required, Validators.minLength(6)]),
+      description: new FormControl(post.description, [Validators.required, Validators.minLength(10)])
     });
     console.log(this.editPostForm.value);
   }
 
   onEditPost() {
     if (this.editPostForm.valid) {
-      const updatedPost: Post = { ...this.post, ...this.editPostForm.value };
-     this.postsStore.dispatch(updatePost({ post: updatedPost}))
+      this.sharedStore.dispatch(setLoadingSpinner({ status: true }));
+      const updatedPost: Post = {
+        id: this.id, // Manteniamo l'ID e le altre proprietà
+        ...this.editPostForm.value // Aggiorniamo solo i campi del form (title e description)
+      };
+      console.log(updatedPost.id)
+      console.log(updatedPost);
+      this.postsStore.dispatch(updatePost({ post: updatedPost}))
     }
     this.router.navigate(['posts']).then()
   }

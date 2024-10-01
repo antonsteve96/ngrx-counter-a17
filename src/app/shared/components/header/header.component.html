@@ -14,14 +14,14 @@
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/posts']">Posts</a>
       </li>
-      <li class="nav-item">
-        <a *ngIf="!(isAuthenticated$ | async)" class="nav-link" [routerLink]="['/login']">Login</a>
+      <li *ngIf="!(isAuthenticated$ | async)" class="nav-item">
+        <a class="nav-link" [routerLink]="['/login']">Login</a>
       </li>
-      <li class="nav-item">
-        <a *ngIf="!(isAuthenticated$ | async)" class="nav-link" [routerLink]="['/signup']">Registrazione</a>
+      <li *ngIf="!(isAuthenticated$ | async)" class="nav-item">
+        <a class="nav-link" [routerLink]="['/signup']">Registrazione</a>
       </li>
-      <li class="nav-item">
-        <a *ngIf="isAuthenticated$ | async" class="nav-link" [routerLink]="['/']">Logout</a>
+      <li *ngIf="isAuthenticated$ | async" class="cursor-pointer nav-item">
+        <a class="nav-link" (click)="onLogout($event)">Logout</a>
       </li>
     </ul>
   </div>

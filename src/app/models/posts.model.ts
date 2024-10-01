@@ -9,3 +9,8 @@ export const initialPost: Post = {
   title: "",
   description: ""
 }
+
+export type PostResponse = Post & {
+  createdDate?: Date | null;
+  lastModifiedDate?: Date | null;
+}

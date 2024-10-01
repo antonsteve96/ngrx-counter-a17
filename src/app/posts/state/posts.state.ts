@@ -7,16 +7,5 @@ export interface PostsState{
 export const POSTS_STATE = "posts";
 
 export const initialState: PostsState = {
-  posts : [
-    {
-      id: 1,
-      title: "Titolo esemplificativo 1",
-      description: "Descrizione esemplificativa 1"
-    },
-    {
-      id: 2,
-      title: "Titolo esemplificativo 2",
-      description: "Descrizione esemplificativa 2"
-    }
-  ]
+  posts : []
 }

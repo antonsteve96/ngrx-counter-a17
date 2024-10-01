@@ -1,9 +1,9 @@
 import {Inject, inject, Injectable, PLATFORM_ID} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
+import {environment} from "../../environments/environment";
 import {Observable, TimeInterval} from "rxjs";
-import {AuthResponse} from "../../models/auth-response.model";
-import {RegistrationRequest} from "../../models/registration-request.model";
+import {AuthResponse} from "../models/auth-response.model";
+import {RegistrationRequest} from "../models/registration-request.model";
 import {isPlatformBrowser} from "@angular/common";
 
 @Injectable({
@@ -32,21 +32,6 @@ export class AuthService{
     return this.http.get(url, { params: { token }})
   }
 
-  getErrorCode(code: number) {
-    switch (code) {
-      case 401:
-        return "Richiesta non autorizzata";
-      case 403:
-        return "Accesso negato";
-      case 404:
-        return "Server non trovato";
-      case 500:
-        return "Errore interno del server";
-      default:
-        return "Errore non specificato";
-    }
-  }
-
   signup(registrationRequest: RegistrationRequest) {
     const url: string = `http://${this.apiUrl}:${this.apiPort}/api/v1/auth/register`;
     return this.http.post(url,
@@ -63,25 +48,45 @@ export class AuthService{
 
   getTokenFromLocalStorage(): string | null {
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
-      const expirationDate = localStorage.getItem('tokenExpiration');
+      try {
+        const token = localStorage.getItem('token');
+        const expirationDate = localStorage.getItem('tokenExpiration');
 
-      if (!token || !expirationDate) {
+        // Controlla se token o expiration date sono nulli
+        if (!token || !expirationDate) {
+          return null;
+        }
+
+        // Converte expirationDate in un numero
+        const currentTime = new Date().getTime();
+        const expirationTime = Number(expirationDate); // +expirationDate può essere ambiguo, meglio esplicito
+
+        // Verifica se il token è scaduto
+        if (currentTime > expirationTime) {
+          // Rimuove il token scaduto
+          localStorage.removeItem('token');
+          localStorage.removeItem('tokenExpiration');
+          return null;
+        }
+
+        // Restituisce il token se tutto è valido
+        return token;
+
+      } catch (error) {
+        console.error('Errore durante l\'accesso a localStorage:', error);
         return null;
       }
-
-      const currentTime = new Date().getTime();
-      if (currentTime > +expirationDate) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('tokenExpiration');
-        return null;
-      }
-
-      return token;
-
     }
-    return null;
+
+    return null; // Non siamo nel contesto del browser
   }
+
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('tokenExpiration');
+  }
+
 }
 
 

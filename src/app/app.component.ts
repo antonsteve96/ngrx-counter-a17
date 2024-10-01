@@ -11,14 +11,13 @@ import {Observable} from "rxjs";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {RootState} from "./store/root.state";
 import {autoLogin} from "./auth/state/auth.actions";
-import {isAuthenticated} from "./auth/state/auth.selectors";
+import {getToken, isAuthenticated} from "./auth/state/auth.selectors";
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    CounterComponent,
     HeaderComponent,
     LoadingSpinnerComponent,
     NgIf,
@@ -36,7 +35,6 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.authStore.dispatch(autoLogin())
-    this.authStore.select(isAuthenticated).subscribe((data) => console.log(data))
   }
 
 }

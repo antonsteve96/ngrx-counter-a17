@@ -5,7 +5,7 @@ import {customEmailValidator, customPasswordValidator} from "../../validators/cu
 import {AppState} from "../../store/app.state";
 import {Store} from "@ngrx/store";
 import {loginStart} from "../state/auth.actions";
-import {AuthService} from "../services/auth.service";
+import {AuthService} from "../../services/auth.service";
 import {HttpClient} from "@angular/common/http";
 import {setLoadingSpinner} from "../../store/shared/shared.actions";
 

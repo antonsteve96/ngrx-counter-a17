@@ -1,9 +1,9 @@
 import {Component, inject} from '@angular/core';
 import {CodeInputModule} from "angular-code-input";
 import {Router} from "@angular/router";
-import {AuthService} from "../services/auth.service";
+import {AuthService} from "../../services/auth.service";
 import {NgIf} from "@angular/common";
-import {catchError, of, tap} from "rxjs";
+import {asyncScheduler, catchError, of, scheduled, tap} from "rxjs";
 
 @Component({
   selector: 'app-account-activation',
@@ -41,7 +41,7 @@ export class AccountActivationComponent {
         this.message = 'Token è scaduto o invalido';
         this.submitted = true;
         this.isOkay = false;
-        return of()
+        return scheduled([],asyncScheduler)
       })
     ).subscribe();
   }

@@ -1,5 +1,5 @@
 export interface AuthState {
-  token: string,
+  token: string | null,
 }
 
 export const initialState: AuthState = {

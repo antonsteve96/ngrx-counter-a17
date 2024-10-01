@@ -2,11 +2,10 @@ import {Component, inject} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Post} from "../../models/posts.model";
-import {getPosts} from "../state/post.selectors";
+import {getPosts} from "../state/posts.selectors";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {RouterLink, RouterOutlet} from "@angular/router";
-import {deletePost} from "../state/posts.actions";
-import {RootState} from "../../store/root.state";
+import {deletePost, loadPosts} from "../state/posts.actions";
 import {AppState} from "../../store/app.state";
 
 @Component({
@@ -27,20 +26,32 @@ export class PostsListComponent {
   private postsStore = inject(Store<AppState>);
 
   ngOnInit(): void {
+    this.postsStore.dispatch(loadPosts())
     this.posts$ = this.postsStore.select(getPosts);
   }
 
   onDeletePost(id: number | undefined): void {
+
     if (id === undefined) {
-      console.error("Id non trovato"); // Segnala l'errore alla console (puoi anche mostrarlo all'utente)
       alert("Errore: ID non trovato. Impossibile cancellare il post.");
       return;
     }
 
-    // Conferma prima di procedere con la cancellazione
-    if (confirm("Sei sicuro di voler cancellare?")) {
-      this.postsStore.dispatch(deletePost({ id }));
+    const confirmationMessage = `Sei sicuro di voler cancellare il post con ID: ${id}?`;
+
+    if (this.confirmDelete(confirmationMessage)) {
+      try {
+        this.postsStore.dispatch(deletePost({ id })); // Dispatch dell'azione di cancellazione
+        alert("Post cancellato con successo.");
+      } catch (error) {
+        console.error("Errore durante la cancellazione del post:", error);
+        alert("Si è verificato un errore durante la cancellazione del post.");
+      }
     }
+  }
+
+  confirmDelete(message: string): boolean {
+    return confirm(message);
   }
 
 }
