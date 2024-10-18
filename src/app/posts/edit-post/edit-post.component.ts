@@ -1,61 +1,52 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
-import {filter, map, Subscription, switchMap} from 'rxjs';
+import {filter, map, switchMap, tap, Subject, takeUntil, Subscription} from 'rxjs';
 import {getPostById} from "../state/posts.selectors";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { initialPost, Post } from "../../models/posts.model";
 import {NgIf} from "@angular/common";
-import {updatePost} from "../state/posts.actions";
+import {updatePost, loadPosts} from "../state/posts.actions"; // Importa l'azione per caricare il post
 import {AppState} from "../../store/app.state";
 import {RootState} from "../../store/root.state";
 import {setLoadingSpinner} from "../../store/shared/shared.actions";
+import {MatError, MatFormFieldModule, MatLabel} from "@angular/material/form-field";
+import {MatButton} from "@angular/material/button";
+import {MatInput} from "@angular/material/input";
 
 
 @Component({
   selector: 'app-edit-post',
   templateUrl: './edit-post.component.html',
   styleUrls: ['./edit-post.component.scss'],
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, MatLabel, MatFormFieldModule, MatError, MatButton, MatInput],
   standalone: true
 })
 export class EditPostComponent implements OnInit, OnDestroy {
-  routeSubscription: Subscription = new Subscription();
-  editPostForm: FormGroup = new FormGroup({});
-  id: number = 0;
+  editPostForm: FormGroup = new FormGroup({
+    title: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    description: new FormControl('', [Validators.required, Validators.minLength(10)])
+  });
+  id =signal(0);
+  private onDestroy$ = new Subject<void>();
 
-  private route = inject(ActivatedRoute);
-  private postsStore = inject(Store<AppState>)
-  private router = inject(Router)
-  private post: Post = initialPost;
-  private sharedStore = inject(Store<RootState>)
+  private postsStore = inject(Store<AppState>);
+  private post = signal(initialPost);
+  private sharedStore = inject(Store<RootState>);
 
   ngOnInit(): void {
-    this.route.paramMap
-      .pipe(
-        map(params => params.get('id')),
-        map(idParam => (idParam ? +idParam : null)),
-        filter((id): id is number => id !== null),
-        switchMap(id => {
-          this.id = id;
-          return this.postsStore.select(getPostById(id)).pipe(
-            filter((post) => !!post)
-          );
-        })
-      )
-      .subscribe((post: Post) => {
-          this.createForm(post);
-          this.post = {...post};
-          console.log(this.post);
-
-      });
-
+    this.postsStore.select(getPostById).pipe(
+      filter((post: Post | undefined) => !!post),
+      tap((post: Post) => this.createForm(post)),
+      takeUntil(this.onDestroy$)
+    ).subscribe((post: Post) =>
+      this.post.set(post)
+    )
   }
 
   ngOnDestroy() {
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   createForm(post: Post) {
@@ -63,20 +54,17 @@ export class EditPostComponent implements OnInit, OnDestroy {
       title: new FormControl(post.title, [Validators.required, Validators.minLength(6)]),
       description: new FormControl(post.description, [Validators.required, Validators.minLength(10)])
     });
-    console.log(this.editPostForm.value);
+    console.log(post);
   }
 
   onEditPost() {
     if (this.editPostForm.valid) {
       this.sharedStore.dispatch(setLoadingSpinner({ status: true }));
       const updatedPost: Post = {
-        id: this.id, // Manteniamo l'ID e le altre proprietà
-        ...this.editPostForm.value // Aggiorniamo solo i campi del form (title e description)
+        id: this.id(),
+        ...this.editPostForm.value
       };
-      console.log(updatedPost.id)
-      console.log(updatedPost);
-      this.postsStore.dispatch(updatePost({ post: updatedPost}))
+      this.postsStore.dispatch(updatePost({ post: updatedPost}));
     }
-    this.router.navigate(['posts']).then()
   }
 }

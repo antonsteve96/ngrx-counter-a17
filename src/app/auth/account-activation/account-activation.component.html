@@ -1,5 +1,5 @@
 <div class="container" *ngIf="submitted else codeForm">
-  <div class="activation-message" *ngIf="isOkay; else activationError">
+  <div class="activation-message" *ngIf="isOkay(); else activationError">
     <h2>Attivation riuscita con successo!</h2>
     <p>Il tuo account è stato attivato con successo</p>
     <button class="btn btn-primary" (click)="redirectToLogin()">Vai al Login</button>
@@ -7,8 +7,8 @@
   <ng-template #activationError>
     <div class="activation-error">
       <h2>Attivazione non riuscita!</h2>
-      <p>{{ message }}</p>
-      <button class="btn btn-primary" (click)="submitted = false">Riprova</button>
+      <p>{{ message() }}</p>
+      <button class="btn btn-primary" (click)="submitted.set(false)">Riprova</button>
     </div>
   </ng-template>
 </div>

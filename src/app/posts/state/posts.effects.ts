@@ -10,11 +10,13 @@ import {
   updatePost,
   updatePostSuccess
 } from "./posts.actions";
-import {asyncScheduler, catchError, exhaustMap, map, mergeMap, scheduled} from "rxjs";
+import {asyncScheduler, catchError, exhaustMap, filter, map, mergeMap, scheduled, switchMap} from "rxjs";
 import {Store} from "@ngrx/store";
 import {setErrorMessage, setLoadingSpinner} from "../../store/shared/shared.actions";
 import {RootState} from "../../store/root.state";
 import {SharedService} from "../../services/shared.service";
+import {BaseRouterStoreState, ROUTER_NAVIGATION, RouterNavigatedAction} from "@ngrx/router-store";
+import {RouterStateUrl} from "../../router/custom-serializer";
 
 @Injectable()
 export class PostsEffects {
@@ -83,5 +85,20 @@ export class PostsEffects {
     })
   ))
 
+  getPostDetails$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigatedAction) => {
+        return r.payload.routerState.url.startsWith("posts/details")
+      }),
+      map((r: any) => {
+        return r.payload.routerState['params']['id']
+      }),
+      switchMap((id: number) => {
+        return this.postsService.getPostById(id).pipe(
+          map(post => loadPostsSuccess({ posts: [{ ...post, id }] })))
+      })
+    )
+  });
 
 }

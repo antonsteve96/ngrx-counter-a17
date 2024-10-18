@@ -1,5 +1,8 @@
 <div [formGroup]="customCounterForm">
-  <div class="my-3">{{ siteName }}</div>
-  <input type="text" placeholder="Inserisci un valore" formControlName="value"/>
-  <button class="btn btn-primary" (click)="onAdd()">Aggiungi un valore al contatore</button>
+  <div class="my-3">{{ siteName() }}</div>
+  <mat-form-field>
+    <mat-label>Inserisci un valore</mat-label>
+    <input matInput type="text" formControlName="value"/>
+  </mat-form-field>
+  <button mat-flat-button color="primary" (click)="onAdd()">Aggiungi un valore al contatore</button>
 </div>

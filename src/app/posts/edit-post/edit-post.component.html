@@ -2,39 +2,42 @@
   <div class="col-md-12">
     <h3>Modifica Post</h3>
     <hr>
-      <form [formGroup]="editPostForm">
-        <div class="mb-3">
-          <label>Titolo</label>
-          <input type="text" class="form-control" formControlName="title">
-          <div *ngIf="editPostForm.get('title')?.invalid && editPostForm.get('title')?.touched">
-            <small class="error">Post non valido</small>
-          </div>
-          <div *ngIf="editPostForm.get('title')?.touched && editPostForm.get('title')?.errors?.['required']">
-            <small class="error">Il campo è richiesto</small>
-          </div>
-          <div *ngIf="editPostForm.get('title')?.touched && editPostForm.get('title')?.errors?.['minlength']">
-            <small class="error">Il campo deve essere lungo almeno 10 caratteri</small>
-          </div>
-
-        </div>
-        <div class="mb-3">
-          <label>Descrizione</label>
-          <textarea class="form-control" formControlName="description"></textarea>
-          <div *ngIf="editPostForm.get('description')?.invalid && editPostForm.get('description')?.touched">
-            <small class="error">Post non valido</small>
-          </div>
-          <div *ngIf="editPostForm.get('description')?.touched && editPostForm.get('description')?.errors?.['required']">
-            <small class="error">Il campo è richiesto</small>
-          </div>
-          <div *ngIf="editPostForm.get('description')?.touched && editPostForm.get('description')?.errors?.['minlength']">
-            <small class="error">Il campo deve essere lungo almeno 10 caratteri</small>
-          </div>
-
-        </div>
-        <div class="mb-3">
-          <button type="submit" class="btn btn-primary" (click)="onEditPost()">Modifica post</button>
-        </div>
-      </form>
+    <form *ngIf="editPostForm" [formGroup]="editPostForm">
+      <div class="mb-5">
+        <mat-form-field>
+        <mat-label>Titolo</mat-label>
+        <input matInput type="text" formControlName="title">
+        <mat-error *ngIf="editPostForm.get('title')?.invalid && editPostForm.get('title')?.touched">
+          Post non valido
+        </mat-error>
+        <mat-error *ngIf="editPostForm.get('title')?.touched && editPostForm.get('title')?.errors?.['required']">
+          Il campo è richiesto
+        </mat-error>
+        <mat-error *ngIf="editPostForm.get('title')?.touched && editPostForm.get('title')?.errors?.['minlength']">
+          Il campo deve essere lungo almeno 10 caratteri
+        </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="mb-5">
+        <mat-form-field>
+          <mat-label>Descrizione</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+          <mat-error *ngIf="editPostForm.get('description')?.invalid && editPostForm.get('description')?.touched">
+            Post non valido
+          </mat-error>
+          <mat-error
+            *ngIf="editPostForm.get('description')?.touched && editPostForm.get('description')?.errors?.['required']">
+            Il campo è richiesto</mat-error>
+          <mat-error
+            *ngIf="editPostForm.get('description')?.touched && editPostForm.get('description')?.errors?.['minlength']">
+            Il campo deve essere lungo almeno 10 caratteri
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="mb-5">
+        <button mat-flat-button color="primary" (click)="onEditPost()">Modifica post</button>
+      </div>
+    </form>
   </div>
 </div>
 

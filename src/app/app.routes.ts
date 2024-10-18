@@ -9,6 +9,7 @@ import {SignupComponent} from "./auth/signup/signup.component";
 import {AccountActivationComponent} from "./auth/account-activation/account-activation.component";
 import {postsGuard} from "./guards/posts.guard";
 import {authGuard} from "./guards/auth.guard";
+import {DetailsPostComponent} from "./posts/details-post/details-post.component";
 
 
 export const routes: Routes = [
@@ -20,6 +21,7 @@ export const routes: Routes = [
       {path: 'edit/:id', component: EditPostComponent},
     ]
   },
+  {path: 'posts/details/:id', component: DetailsPostComponent},
   {path: 'login', component: LoginComponent, canActivate: [authGuard]},
   {path: 'signup', component: SignupComponent},
   {path: 'account-activation', component: AccountActivationComponent}

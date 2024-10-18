@@ -3,41 +3,46 @@
     <h3>Login</h3>
     <hr>
     <form [formGroup]="loginForm">
-      <div class="mb-3">
-        <label>Email</label>
-        <input type="text" class="form-control" formControlName="email"/>
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-          <small class="error"> Campo non valido</small>
-        </div>
-        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
-          <small class="error">Il campo è richiesto</small>
-        </div>
-        <div *ngIf="loginForm.get('email')?.hasError('invalidEmail') && loginForm.get('email')?.touched">
-          <small class="error">Email non valida</small>
-        </div>
+      <div class="mb-5">
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput type="text" formControlName="email"/>
+          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+           Campo non valido
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
+            Il campo è richiesto
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('invalidEmail') && loginForm.get('email')?.touched">
+            Email non valida
+          </mat-error>
+        </mat-form-field>
       </div>
-      <div class="mb-3">
-        <label>Password</label>
-        <input type="text" class="form-control" formControlName="password"/>
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          <small class="error"> Campo non valido</small>
-        </div>
-        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
-          <small class="error">Il campo è richiesto</small>
-        </div>
-        <div *ngIf="loginForm.get('password')?.hasError('invalidPassword') && loginForm.get('password')?.touched">
-          <small class="error">Password non valida</small>
-        </div>
-        <div *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched">
-          <small class="error">Password troppo corta</small>
-        </div>
-        <div *ngIf="loginForm.get('password')?.errors?.['maxlength'] && loginForm.get('password')?.touched">
-          <small class="error">Password troppo lunga</small>
-        </div>
+      <div class="mb-5">
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput type="text" formControlName="password"/>
+          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Campo non valido
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
+            Il campo è richiesto
+          </mat-error>
+          <mat-error
+            *ngIf="loginForm.get('password')?.hasError('invalidPassword') && loginForm.get('password')?.touched">
+            Password non valida
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched">
+            Password troppo corta
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.errors?.['maxlength'] && loginForm.get('password')?.touched">
+            Password troppo lunga
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="mb-3">
-        <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary" (click)="onLogin()">Login</button>
+        <mat-button-toggle type="submit" [disabled]="loginForm.invalid" color="primary" (click)="onLogin()">Login</mat-button-toggle>
       </div>
     </form>
   </div>

@@ -7,13 +7,21 @@ import {addPost} from "../state/posts.actions";
 import {AppState} from "../../store/app.state";
 import {RootState} from "../../store/root.state";
 import {setLoadingSpinner} from "../../store/shared/shared.actions";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-add-post',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatFormField,
+    MatButton
   ],
   templateUrl: './add-post.component.html',
   styleUrl: './add-post.component.scss'

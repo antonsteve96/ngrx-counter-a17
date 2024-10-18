@@ -1,9 +1,8 @@
 <app-header></app-header>
-<app-loading-spinner *ngIf="showLoadingSpinner$ | async"></app-loading-spinner>
+<mat-progress-spinner *ngIf="showLoadingSpinner()"></mat-progress-spinner>
 <div class="container">
   <div class="row">
     <div class="col-md-12 text-center">
-      <div *ngIf="(errorMessage$ | async) !== ''" class="alert alert-danger">{{errorMessage$ | async}}</div>
       <router-outlet></router-outlet>
     </div>
   </div>

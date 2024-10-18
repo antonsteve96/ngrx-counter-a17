@@ -1,5 +1,5 @@
 import {inject, Injectable, SkipSelf} from "@angular/core";
-import {environment} from "../../environments/environment";
+import {environment} from "../../environments/environment.development";
 import {HttpClient} from "@angular/common/http";
 import {Post, PostResponse} from "../models/posts.model";
 import {map, Observable} from "rxjs";
@@ -34,14 +34,19 @@ export class PostsService {
   }
 
   updatePost(post: Post): Observable<Post> {
-    console.log(post.id)
     const url = `http://${this.apiUrl}:${this.apiPort}/api/v1/posts/update/${post.id}`;
+    console.log("post", post)
     return this.http.put<Post>(url,post);
   }
 
   deletePost(id: number) {
     const url = `http://${this.apiUrl}:${this.apiPort}/api/v1/posts/delete/${id}`;
     return this.http.delete<void>(url);
+  }
+
+  getPostById(id: number): Observable<Post> {
+    const url = `http://${this.apiUrl}:${this.apiPort}/api/v1/posts/details/${id}`;
+    return this.http.get<Post>(url)
   }
 
 }

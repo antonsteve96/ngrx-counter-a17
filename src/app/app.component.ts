@@ -1,17 +1,16 @@
-import {Component, inject} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Signal, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { counterReducer } from "./counter/state/counter.reducer";
-import {Store, StoreModule} from "@ngrx/store";
-import { CounterComponent } from "./counter/counter/counter.component";
-import {HeaderComponent} from "./shared/components/header/header.component";
-import {LoadingSpinnerComponent} from "./shared/components/loading-spinner/loading-spinner.component";
-import {getErrorMessage, getLoadingSpinner, SHARED_STATE} from "./store/shared/shared.selectors";
-import {AppState} from "./store/app.state";
-import {Observable} from "rxjs";
-import {AsyncPipe, NgIf} from "@angular/common";
-import {RootState} from "./store/root.state";
-import {autoLogin} from "./auth/state/auth.actions";
-import {getToken, isAuthenticated} from "./auth/state/auth.selectors";
+import { Store } from "@ngrx/store";
+import { HeaderComponent } from "./shared/components/header/header.component";
+import { getErrorMessage, getLoadingSpinner } from "./store/shared/shared.selectors";
+import { filter } from "rxjs";
+import { NgIf } from "@angular/common";
+import { RootState } from "./store/root.state";
+import { autoLogin } from "./auth/state/auth.actions";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { SnackbarService } from "./services/snackbar.service";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-root',
@@ -19,22 +18,35 @@ import {getToken, isAuthenticated} from "./auth/state/auth.selectors";
   imports: [
     RouterOutlet,
     HeaderComponent,
-    LoadingSpinnerComponent,
+    MatProgressSpinnerModule,
     NgIf,
-    AsyncPipe,
+    MatSnackBarModule
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'] // Corretto con "styleUrls"
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   private sharedStore = inject(Store<RootState>);
   private authStore = inject(Store<RootState>);
-  showLoadingSpinner$: Observable<boolean> = this.sharedStore.select(getLoadingSpinner);
-  errorMessage$: Observable<string> = this.sharedStore.select(getErrorMessage);
+  private snackbarService = inject(SnackbarService);
 
+  showLoadingSpinner: Signal<boolean> = toSignal(this.sharedStore.select(getLoadingSpinner), {initialValue: false});
+  errorMessage: Signal<string> = toSignal(this.sharedStore.select(getErrorMessage), { initialValue: '' });
 
-  ngOnInit(): void {
-    this.authStore.dispatch(autoLogin())
+  constructor() {
+    effect(() => {
+      const errorMessage = this.errorMessage();
+      if (errorMessage) {
+        this.snackbarService.openSnackbar(errorMessage);
+      }
+    });
   }
 
+  ngOnInit(): void {
+    this.authStore.dispatch(autoLogin());
+  }
+
+  ngOnDestroy() {
+    // Nessuna subscription manuale da cancellare, tutto è gestito dai signals
+  }
 }

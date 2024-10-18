@@ -1,11 +1,13 @@
-import {Post} from "../../models/posts.model";
+import {initialPost, Post} from "../../models/posts.model";
 
 export interface PostsState{
-  posts: Post[]
+  posts: Post[],
+  currentPost: Post
 }
 
 export const POSTS_STATE = "posts";
 
 export const initialState: PostsState = {
-  posts : []
+  posts : [],
+  currentPost: initialPost
 }

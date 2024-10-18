@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {CounterOutputComponent} from "../counter-output/counter-output.component";
 import {CounterButtonsComponent} from "../counter-buttons/counter-buttons.component";
 import {CustomCounterInputComponent} from "../custom-counter-input/custom-counter-input.component";
@@ -15,6 +15,6 @@ import {CustomCounterInputComponent} from "../custom-counter-input/custom-counte
   styleUrl: './counter.component.scss'
 })
 export class CounterComponent {
-  counter: number = 0;
+  counter = signal(0);
 
 }
