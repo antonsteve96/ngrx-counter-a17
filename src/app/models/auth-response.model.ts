@@ -1,4 +1,4 @@
 
-export interface AuthResponse{
-  token: string
+export type AuthResponse = {
+  token: string | null | undefined;
 }
