@@ -1,13 +1,19 @@
-import {AppState, appStateKey} from "../../store/app.state";
-import {CounterState} from "./counter.state";
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {  } from './counter.reducer';
+import {COUNTER_STATE, CounterState} from "./counter.state"; // Assicurati che CounterState sia importato
 
-export const getCounterState = (state: AppState): CounterState => {
-  // @ts-ignore
-  return state[appStateKey].counter;
-}
+
+// Selettore del feature state di `counter`
+export const getCounterState = createFeatureSelector<CounterState>(COUNTER_STATE);
 
 // Selettore per ottenere il valore del contatore
-export const getCounter = (state: AppState): number => getCounterState(state).counter;
+export const getCounter = createSelector(
+  getCounterState,
+  (state: CounterState) => state.counter
+);
 
 // Selettore per ottenere il nome del sito
-export const getSiteName = (state: AppState): string => getCounterState(state).siteName;
+export const getSiteName = createSelector(
+  getCounterState,
+  (state: CounterState) => state.siteName
+);

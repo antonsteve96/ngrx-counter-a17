@@ -82,7 +82,7 @@ export class AuthEffects {
       map(() => {
         this.authService.logout();
         this.router.navigate(['']).then(() => {
-          console.log('Navigazione completata');
+          console.debug('Navigazione completata');
         });
       })
     ), {dispatch: false}

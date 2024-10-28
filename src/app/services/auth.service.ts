@@ -1,10 +1,10 @@
 import {Inject, inject, Injectable, PLATFORM_ID} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {Observable, TimeInterval} from "rxjs";
+import {Observable} from "rxjs";
 import {AuthResponse} from "../models/auth-response.model";
 import {RegistrationRequest} from "../models/registration-request.model";
 import {isPlatformBrowser} from "@angular/common";
+import {environment} from "../../environments/environment.development";
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,7 @@ export class AuthService{
 
         // Controlla se token o expiration date sono nulli
         if (!token || !expirationDate) {
-          return null;
+          return "";
         }
 
         // Converte expirationDate in un numero
@@ -74,11 +74,11 @@ export class AuthService{
 
       } catch (error) {
         console.error('Errore durante l\'accesso a localStorage:', error);
-        return null;
+        return "";
       }
     }
 
-    return null; // Non siamo nel contesto del browser
+    return ""; // Non siamo nel contesto del browser
   }
 
 

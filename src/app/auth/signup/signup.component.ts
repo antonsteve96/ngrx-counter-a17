@@ -31,7 +31,7 @@ import {MatButton} from "@angular/material/button";
   encapsulation: ViewEncapsulation.None
 })
 export class SignupComponent implements OnInit{
-  private authState = inject(Store<AppState>)
+  private authStore = inject(Store<AppState>)
   private sharedState = inject(Store<RootState>)
   signupForm: FormGroup = new FormGroup({})
 
@@ -48,7 +48,7 @@ export class SignupComponent implements OnInit{
     this.sharedState.dispatch(setLoadingSpinner({ status: true }))
     const signupFormValue = this.signupForm.value;
     console.log(signupFormValue);
-    this.authState.dispatch(signupStart({registrationRequest: signupFormValue}))
+    this.authStore.dispatch(signupStart({registrationRequest: signupFormValue}))
 
   }
 

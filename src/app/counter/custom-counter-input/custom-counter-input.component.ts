@@ -3,12 +3,10 @@ import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {Store} from "@ngrx/store";
 import {customIncrement} from "../state/counter.actions";
 import {getSiteName} from "../state/counter.selectors";
-import {RootState} from "../../store/root.state";
 import {AppState} from "../../store/app.state";
 import {MatButton} from "@angular/material/button";
 import {MatInput, MatLabel} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {sign} from "node:crypto";
 
 @Component({
   selector: 'app-custom-counter-input',
@@ -36,7 +34,7 @@ export class CustomCounterInputComponent implements OnInit{
   }
 
   onAdd() {
-    this.counterStore.dispatch(customIncrement({value: +this.customCounterForm.value.value}))
+    this.counterStore.dispatch(customIncrement({value: Number(this.customCounterForm.value.value)}))
   }
 
 
