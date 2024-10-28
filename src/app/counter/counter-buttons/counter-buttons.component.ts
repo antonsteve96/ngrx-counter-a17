@@ -1,8 +1,6 @@
 import {Component, inject} from '@angular/core';
-import {Store} from "@ngrx/store";
-import {changeSiteName, decrement, increment, reset} from "../state/counter.actions";
-import {AppState} from "../../store/app.state";
 import {MatButton} from "@angular/material/button";
+import {CounterStore} from "../state/counter.state";
 
 @Component({
   selector: 'app-counter-buttons',
@@ -15,21 +13,22 @@ import {MatButton} from "@angular/material/button";
 })
 export class CounterButtonsComponent {
 
-  private counterStore = inject(Store<AppState>)
+  readonly counterStore = inject(CounterStore)
 
   onIncrement() {
-    this.counterStore.dispatch(increment());
+    this.counterStore.increment();
   }
 
   onDecrement() {
-    this.counterStore.dispatch(decrement());
+    this.counterStore.decrement();
   }
 
   onReset() {
-    this.counterStore.dispatch(reset());
+    this.counterStore.reset();
   }
 
   onChangeChannelName() {
-    this.counterStore.dispatch(changeSiteName());
+    this.counterStore.changeSiteName();
   }
+
 }

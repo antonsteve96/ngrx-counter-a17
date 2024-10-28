@@ -4,8 +4,8 @@
   <button mat-button routerLink="/">Home</button>
   <button mat-button routerLink="/counter">Contatore</button>
   <button mat-button routerLink="/posts">Posts</button>
-  <button *ngIf="!isAuthenticated()" mat-button routerLink="/login">Login</button>
-  <button *ngIf="!isAuthenticated()" mat-button routerLink="/signup">Registrazione</button>
-  <button *ngIf="isAuthenticated()" mat-button (click)="onLogout($event)">Logout</button>
+  <button *ngIf="!authStore.isAuthenticated()" mat-button routerLink="/login">Login</button>
+  <button *ngIf="!authStore.isAuthenticated()" mat-button routerLink="/signup">Registrazione</button>
+  <button *ngIf="authStore.isAuthenticated()" mat-button (click)="onLogout($event)">Logout</button>
 </mat-toolbar>
 

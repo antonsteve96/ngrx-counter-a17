@@ -7,9 +7,6 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
-import {Store} from "@ngrx/store";
-import {AuthState} from "../../../auth/state/auth.state";
-import {AppState} from "../../../store/app.state";
 
 @Component({
   selector: 'app-confirm-dialog',

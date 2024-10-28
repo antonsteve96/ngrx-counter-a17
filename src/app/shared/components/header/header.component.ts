@@ -1,15 +1,9 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { isAuthenticated } from "../../../auth/state/auth.selectors";
 import { NgIf, AsyncPipe } from "@angular/common";
-import { RootState } from "../../../store/root.state";
-import { autoLogout } from "../../../auth/state/auth.actions";
-import { AppState } from "../../../store/app.state";
-import { resetPosts } from "../../../posts/state/posts.actions";
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatButton } from "@angular/material/button";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {AuthStore} from "../../../auth/state/auth.state";
 
 @Component({
   selector: 'app-header',
@@ -25,17 +19,12 @@ import {toSignal} from "@angular/core/rxjs-interop";
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  private authStore = inject(Store<RootState>);
-  private postsStore = inject(Store<AppState>);
-
-  isAuthenticated: Signal<boolean> = toSignal(
-    this.authStore.select(isAuthenticated),
-    { initialValue: false }
-  );
+  authStore = inject(AuthStore);
+  //private postsStore = inject(Store<AppState>);
 
   onLogout(event: Event) {
     event.preventDefault();
-    this.postsStore.dispatch(resetPosts());
-    this.authStore.dispatch(autoLogout());
+    //this.postsStore.dispatch(resetPosts());
+    this.authStore.logout().then()
   }
 }

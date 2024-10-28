@@ -1,5 +1,5 @@
 <div [formGroup]="customCounterForm">
-  <div class="my-3">{{ siteName() }}</div>
+  <div class="my-3">{{ counterStore.getSiteName() }}</div>
   <mat-form-field>
     <mat-label>Inserisci un valore</mat-label>
     <input matInput type="text" formControlName="value"/>

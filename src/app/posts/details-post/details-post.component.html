@@ -1,6 +1,6 @@
 <h3>Posts details</h3>
-<div *ngIf="post()">
-  <h4>Id: {{ post().id}}</h4>
-  <h4>Title: {{ post().title }}</h4>
-  <h4>Description: {{ post().description }}</h4>
+<div *ngIf="postsStore.getPostById(id())">
+  <h4>Id: {{ postsStore.getPostById(id())?.id}}</h4>
+  <h4>Title: {{ postsStore.getPostById(id())?.title }}</h4>
+  <h4>Description: {{ postsStore.getPostById(id())?.description }}</h4>
 </div>

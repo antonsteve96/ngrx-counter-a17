@@ -1,11 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {initialPost, Post} from "../../models/posts.model";
-import {AppState} from "../../store/app.state";
-import {Store} from "@ngrx/store";
-import {getPostById} from "../state/posts.selectors";
-import {filter} from "rxjs";
-import {toSignal} from "@angular/core/rxjs-interop";
 import {CommonModule} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
+import {PostsStore} from "../state/posts.state";
 
 @Component({
   selector: 'app-details-post',
@@ -15,16 +11,12 @@ import {CommonModule} from "@angular/common";
   styleUrl: './details-post.component.scss'
 })
 export class DetailsPostComponent implements OnInit {
-  private postsStore = inject(Store<AppState>);
-  post = toSignal(
-    this.postsStore.select(getPostById).pipe(
-      filter((post: Post | undefined) => post !== undefined)
-    ),
-    { initialValue: initialPost }
-  );
-
+  private route = inject(ActivatedRoute);
+  id = signal<number>(0);
+  postsStore = inject(PostsStore);
 
   ngOnInit(): void {
-
+    this.id.set(Number(this.route.snapshot.params['id']));
   }
+
 }

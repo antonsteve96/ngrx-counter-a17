@@ -2,14 +2,10 @@ import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {Post} from "../../models/posts.model";
-import {Store} from "@ngrx/store";
-import {addPost} from "../state/posts.actions";
-import {AppState} from "../../store/app.state";
-import {RootState} from "../../store/root.state";
-import {setLoadingSpinner} from "../../store/shared/shared.actions";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
+import {PostsStore} from "../state/posts.state";
 
 @Component({
   selector: 'app-add-post',
@@ -31,13 +27,11 @@ export class AddPostComponent {
     title: new FormControl("", [Validators.required, Validators.minLength(6)]),
     description: new FormControl("", [Validators.required, Validators.minLength(10)])
   })
-  private sharedStore = inject(Store<RootState>)
-  private postsStore = inject(Store<AppState>);
+  private postsStore = inject(PostsStore);
 
   onAddPost() {
-    this.sharedStore.dispatch(setLoadingSpinner({ status: true }))
     const post: Post = {...this.addPostForm.value}
-    this.postsStore.dispatch(addPost({ post: post }))
+    this.postsStore.addPost(post).then()
   }
 
 

@@ -1,12 +1,7 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { filter } from "rxjs";
-import { Post } from "../../models/posts.model";
-import { getPosts } from "../state/posts.selectors";
+import { Component, inject, OnInit } from '@angular/core';
 import { AsyncPipe, NgForOf, NgIf } from "@angular/common";
 import {RouterLink, RouterOutlet} from "@angular/router";
-import { deletePost, loadPosts } from "../state/posts.actions";
-import { AppState } from "../../store/app.state";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {
   MatCell,
   MatCellDef,
@@ -14,12 +9,12 @@ import {
   MatHeaderCell,
   MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
-  MatTable
+  MatTable,
 } from "@angular/material/table";
 import {MatAnchor, MatButton} from "@angular/material/button";
-import {toSignal} from "@angular/core/rxjs-interop";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
+import {PostsStore} from "../state/posts.state";
 
 @Component({
   selector: 'app-posts-list',
@@ -28,25 +23,20 @@ import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component"
     AsyncPipe, NgForOf, NgIf, RouterLink,
     MatTable, MatColumnDef, MatHeaderCell,
     MatHeaderCellDef, MatCellDef, MatCell, MatButton,
-    MatHeaderRowDef, MatRowDef, MatTable, MatAnchor, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCellDef, MatCell, MatButton, MatHeaderRow, MatHeaderRowDef, MatRowDef, MatRow, RouterOutlet
+    MatHeaderRowDef, MatRowDef, MatTable, MatAnchor, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCellDef, MatCell, MatButton, MatHeaderRow, MatHeaderRowDef, MatRowDef, MatRow, RouterOutlet, MatProgressSpinnerModule
+
   ],
   templateUrl: './posts-list.component.html',
   styleUrls: ['./posts-list.component.scss'] // Corretto "styleUrls"
 })
 export class PostsListComponent implements OnInit {
-  private postsStore = inject(Store<AppState>);
+  postsStore = inject(PostsStore);
   displayedColumns: string[] = ["Id", "Title", "Description", "Actions"];
   private dialog = inject(MatDialog);
 
-  // Definire `posts` direttamente con `toSignal`
-  posts: Signal<Post[]> = toSignal(
-    this.postsStore.select(getPosts).pipe(filter((posts) => posts !== null)),
-    { initialValue: [] }
-  );
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Dispatch dell'azione di caricamento una volta all'avvio
-    this.postsStore.dispatch(loadPosts());
+    this.postsStore.loadAll().then();
   }
 
   onDeletePost(id: number | undefined): void {
@@ -65,15 +55,8 @@ export class PostsListComponent implements OnInit {
       if (result) {
         console.log('Elemento cancellato con ID:', id);
         // Aggiungi qui la chiamata al servizio per cancellare l'elemento
-        this.postsStore.dispatch(deletePost({id}))
+        this.postsStore.deletePost(id).then()
       }
     });
-
-
-
-
   }
-
-
-
 }
