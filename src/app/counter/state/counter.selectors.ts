@@ -6,7 +6,7 @@ import {COUNTER_STATE, CounterState} from './counter.state';
 export const getCounterState = createFeatureSelector<CounterState>(COUNTER_STATE);
 
 // Selettore per ottenere il valore del contatore
-export const selectCounter = createSelector(
+export const getCounter = createSelector(
   getCounterState,
   (state: CounterState) => state.counter
 );
